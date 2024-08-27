@@ -13,6 +13,6 @@ def get_api_data() -> dict:
 def main():
     random_data = get_api_data()
     print(random_data)
-
+#
 if __name__ == "__main__":
     main()

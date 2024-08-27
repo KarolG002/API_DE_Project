@@ -35,7 +35,7 @@ def generate_data():
     # Generate employment data
     data["employment"] = {}
     data["employment"]["title"] = fake.job().title()
-
+#
 
     # Generate address data
     data["address"] = {}

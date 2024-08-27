@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 import uvicorn
-from datagenerator import generate_data
+from src.pipeline.datagenerator import generate_data
 
 app = FastAPI()
 
@@ -14,7 +14,7 @@ async def redirect_to_docs():
 @app.get('/v2/random-data')
 def random_data():
     return generate_data()
-
+#
 
 if __name__ == '__main__':
     uvicorn.run(app)
