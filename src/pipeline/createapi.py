@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 import uvicorn
-from src.pipeline.datagenerator import generate_data
+from datagenerator import generate_data
 
 app = FastAPI()
 
