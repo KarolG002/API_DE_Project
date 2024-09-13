@@ -1,9 +1,13 @@
 import requests
+from google.cloud import bigquery
+import pandas as pd
+from credentials import credentials
+URL = "http://127.0.0.1:8000/v2/random-data"
+TABLE_ID = "dwh-terraform-gcp.api_rand_dataset.api_data"
 
-url = "http://127.0.0.1:8000/v2/random-data"
 def get_api_data() -> dict:
     try:
-        response = requests.get(url)
+        response = requests.get(URL)
         random_data_dict = response.json()
         return random_data_dict
     except requests.exceptions.RequestException as e:
@@ -65,11 +69,27 @@ def clean_api_data(client_data: dict) -> dict:
 
     return cleaned_data
 
+def load_to_bq(cleaned_data: dict, table_id: str):
+    client = bigquery.Client(credentials=credentials)
+    df = pd.DataFrame.from_dict([cleaned_data])
+
+    job = client.load_table_from_dataframe(df, table_id)
+    job.result()
+    
+    print(f"Loaded {job.output_rows} rows into {table_id}")
+
+    
+
+
+
 def main():
     random_data = get_api_data()
     #print(random_data)
     cleaned_data = clean_api_data(random_data)
     print(cleaned_data)
+
+    load_to_bq(cleaned_data, TABLE_ID)
+
 
 ##
 if __name__ == "__main__":
