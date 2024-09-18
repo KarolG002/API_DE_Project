@@ -2,8 +2,11 @@ import requests
 from google.cloud import bigquery
 import pandas as pd
 from credentials import credentials
+
 URL = "http://127.0.0.1:8000/v2/random-data"
 TABLE_ID = "dwh-terraform-gcp.api_rand_dataset.api_data"
+WINDOW_SIZE = 5
+
 
 def get_api_data() -> dict:
     try:
@@ -69,26 +72,29 @@ def clean_api_data(client_data: dict) -> dict:
 
     return cleaned_data
 
-def load_to_bq(cleaned_data: dict, table_id: str):
-    client = bigquery.Client(credentials=credentials)
-    df = pd.DataFrame.from_dict([cleaned_data])
 
-    job = client.load_table_from_dataframe(df, table_id)
+def load_to_bq(cleaned_data, table_id: str):
+    client = bigquery.Client(credentials=credentials)
+
+    job = client.load_table_from_dataframe(cleaned_data, table_id)
     job.result()
     
-    print(f"Loaded {job.output_rows} rows into {table_id}")
+    #print(f"Loaded {job.output_rows} rows into {table_id}")
 
     
 
 
 
 def main():
-    random_data = get_api_data()
-    #print(random_data)
-    cleaned_data = clean_api_data(random_data)
-    print(cleaned_data)
-
-    load_to_bq(cleaned_data, TABLE_ID)
+    batch_data = []
+    for _ in range(WINDOW_SIZE):
+        random_data = get_api_data()
+        cleaned_data = clean_api_data(random_data)
+        batch_data.append(cleaned_data)
+    
+    df = pd.DataFrame(batch_data)
+    load_to_bq(df, TABLE_ID)
+    print(f"Loaded batch of {len(batch_data)} records into BigQuery")
 
 
 ##
