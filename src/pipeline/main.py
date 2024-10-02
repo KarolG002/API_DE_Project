@@ -2,12 +2,15 @@ import requests
 from google.cloud import bigquery
 import pandas as pd
 from credentials import credentials
+from prefect import flow, task
+from prefect.client.schemas.schedules import IntervalSchedule
+from datetime import datetime
 
 URL = "http://127.0.0.1:8000/v2/random-data"
 TABLE_ID = "dwh-terraform-gcp.api_rand_dataset.api_data"
 WINDOW_SIZE = 5
 
-
+@task
 def get_api_data() -> dict:
     try:
         response = requests.get(URL)
@@ -16,7 +19,7 @@ def get_api_data() -> dict:
     except requests.exceptions.RequestException as e:
         print("Could not access API")
         raise SystemExit(e)
-
+@task
 def clean_api_data(client_data: dict) -> dict:
     employment_dict = client_data.get("employment", {})
     employment_title = employment_dict.get("title")
@@ -72,7 +75,7 @@ def clean_api_data(client_data: dict) -> dict:
 
     return cleaned_data
 
-
+@task
 def load_to_bq(cleaned_data, table_id: str):
     client = bigquery.Client(credentials=credentials)
 
@@ -81,11 +84,8 @@ def load_to_bq(cleaned_data, table_id: str):
     
     #print(f"Loaded {job.output_rows} rows into {table_id}")
 
-    
-
-
-
-def main():
+@flow   
+def load_flow():
     batch_data = []
     for _ in range(WINDOW_SIZE):
         random_data = get_api_data()
@@ -97,6 +97,11 @@ def main():
     print(f"Loaded batch of {len(batch_data)} records into BigQuery")
 
 
+def main():
+    load_flow.serve(
+        name="rand-collection-deployment",
+        interval=5
+    )
 ##
 if __name__ == "__main__":
     main()
