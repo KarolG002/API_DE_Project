@@ -1,17 +1,12 @@
 {% macro clean_phone_number(phone_column) %}
-    -- Remove all non-numeric characters except for the extension marker 'x'
-    WITH cleaned_phone AS (
-        SELECT
-            {{ phone_column }} AS original_phone,
-            REGEXP_EXTRACT(REGEXP_REPLACE({{ phone_column }}, r'[^0-9x]', ''), r'([0-9]+x?[0-9]*)') AS numeric_phone -- Cleaned main number with optional extension
-        )
-    
-    -- Extract the main phone number and the extension (if present)
-    SELECT
-        original_phone,
-        REGEXP_EXTRACT(numeric_phone, r'^([0-9]+)') AS main_phone,   -- Extracts main phone number
-        REGEXP_EXTRACT(numeric_phone, r'x([0-9]+)$') AS extension    -- Extracts extension (if any)
-    FROM cleaned_phone
+    CASE
+        WHEN {{ phone_column }} IS NULL THEN NULL
+        ELSE
+            CONCAT(
+                REGEXP_EXTRACT(REGEXP_REPLACE({{ phone_column }}, r'[^0-9x]', ''), r'^(\d{1,10})'),
+                COALESCE(CONCAT('x', NULLIF(REGEXP_EXTRACT(REGEXP_REPLACE({{ phone_column }}, r'[^0-9x]', ''), r'x(\d+)$'), '')), '')
+            )
+    END
 {% endmacro %}
 
 {% macro clean_email(email_column) %}
