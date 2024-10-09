@@ -1,0 +1,8 @@
+
+version: 2
+
+sources:
+  - name: user_data_source        # The name of your source (used in the model)
+    schema: api_rand_dataset    # The schema/dataset in BigQuery
+    tables:
+      - name: api_data    
