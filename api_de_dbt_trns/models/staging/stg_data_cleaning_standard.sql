@@ -89,6 +89,11 @@ final_data AS (
             CASE WHEN address_zip_code IS NOT NULL THEN ', ' || address_zip_code ELSE '' END,
             CASE WHEN address_country IS NOT NULL THEN ', ' || address_country ELSE '' END
         ) AS full_address,
+        address_street_name,
+        address_city,
+        address_state,
+        address_zip_code,
+        address_country,
         address_coordinates_lat,
         address_coordinates_lng,
         credit_card_cc_number,
