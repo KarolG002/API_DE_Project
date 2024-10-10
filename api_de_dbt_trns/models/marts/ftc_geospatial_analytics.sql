@@ -3,6 +3,7 @@
 WITH geospatial_analysis AS (
     SELECT
         id,
+        uid,
         address_city,
         address_state,
         address_country,
