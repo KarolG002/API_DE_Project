@@ -8,8 +8,9 @@ WITH financial_insights AS (
         subscription_plan,
         subscription_payment_method,
         CASE
-            WHEN LOWER(subscription_plan) = 'premium' THEN 19.99
-            WHEN LOWER(subscription_plan) = 'basic' THEN 9.99
+            WHEN LOWER(subscription_plan) = 'gold' THEN 29.99
+            WHEN LOWER(subscription_plan) = 'silver' THEN 19.99
+            WHEN LOWER(subscription_plan) = 'bronze' THEN 9.99
             ELSE 0
         END AS monthly_revenue
     FROM {{ ref('stg_data_cleaning_standard') }}

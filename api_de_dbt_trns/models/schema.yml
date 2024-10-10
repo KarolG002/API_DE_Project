@@ -5,8 +5,153 @@ models:
   - name: stg_data_cleaning_standard
     description: "A staging model for cleaning data"
     columns:
-      - name: id
+      - name: uid
         description: "The primary key for this table"
         data_tests:
           - unique
           - not_null
+  - name: ftc_customer_profile
+    description: "Comprehensive view of each customer for marketing and customer service teams"
+    columns:
+      - name: uid
+        description: "Unique uidentifier for each customer"
+        tests:
+          - unique
+          - not_null
+      - name: username
+        description: "Customer's username in the system"
+      - name: email
+        description: "Customer's email address"
+        tests:
+          - not_null
+      - name: gender
+        description: "Customer's gender"
+      - name: formatted_phone
+        description: "Customer's phone number in a standardized format"
+      - name: date_of_birth
+        description: "Customer's date of birth"
+      - name: age
+        description: "Customer's age calculated from date of birth"
+        tests:
+          - not_null
+      - name: full_address
+        description: "Customer's full address"
+      - name: employment_title
+        description: "Customer's job title or profession"
+
+  - name: ftc_subscription_analytics
+    description: "Subscription trends for product and sales teams"
+    columns:
+      - name: uid
+        description: "Unique uidentifier for each subscription"
+        tests:
+          - unique
+          - not_null
+      - name: subscription_plan
+        description: "Type of subscription plan (e.g., basic, premium)"
+      - name: subscription_status
+        description: "Current status of the subscription (active, inactive, cancelled)"
+        tests:
+          - accepted_values:
+              values: ['Active', 'Inactive', 'cancelled']
+      - name: subscription_payment_method
+        description: "Method used for subscription payment"
+      - name: subscription_term
+        description: "Duration of the subscription (e.g., monthly, yearly)"
+      - name: is_active
+        description: "Flag indicating if the subscription is currently active (1) or not (0)"
+        tests:
+          - accepted_values:
+              values: [0, 1]
+              quote: false
+  - name: ftc_geospatial_analysis
+    description: "Geographic distribution of customers for location-based insights"
+    columns:
+      - name: uid
+        description: "Unique uidentifier for each customer"
+        tests:
+          - not_null
+      - name: address_city
+        description: "City of the customer's address"
+      - name: address_state
+        description: "State or province of the customer's address"
+      - name: address_country
+        description: "Country of the customer's address"
+      - name: address_coordinates_lat
+        description: "Latitude coordinate of the customer's address"
+        tests:
+          - not_null
+      - name: address_coordinates_lng
+        description: "Longitude coordinate of the customer's address"
+        tests:
+          - not_null
+      - name: geo_point
+        description: "Geographic point representation of the customer's location"
+
+  - name: ftc_financial_insights
+    description: "Financial data for revenue analysis and fraud detection"
+    columns:
+      - name: uid
+        description: "Unique uidentifier for each customer"
+        tests:
+          - not_null
+      - name: credit_card_cc_number
+        description: "Masked credit card number for payment"
+      - name: subscription_plan
+        description: "Type of subscription plan (e.g., basic, premium)"
+      - name: subscription_payment_method
+        description: "Method used for subscription payment"
+      - name: monthly_revenue
+        description: "Calculated monthly revenue from the customer's subscription"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 9.99, 19.99, 29.99]
+              quote: false
+  - name: ftc_customer_engagement
+    description: "User engagement data for product development and customer retention teams"
+    columns:
+      - name: uid
+        description: "Unique uidentifier for each customer"
+        tests:
+          - unique
+          - not_null
+      - name: username
+        description: "Customer's username in the system"
+      - name: email
+        description: "Customer's email address"
+      - name: subscription_status
+        description: "Current status of the subscription (active, inactive, cancelled)"
+      - name: subscription_term
+        description: "Duration of the subscription (e.g., monthly, yearly)"
+      - name: engagement_score
+        description: "Calculated score representing the customer's level of engagement"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 5]
+              quote: false
+  - name: ftc_demographics
+    description: "Demographic insights for marketing and product teams"
+    columns:
+      - name: uid
+        description: "Unique uidentifier for each customer"
+        tests:
+          - unique
+          - not_null
+      - name: gender
+        description: "Customer's gender"
+      - name: date_of_birth
+        description: "Customer's date of birth"
+      - name: age
+        description: "Customer's age calculated from date of birth"
+      - name: age_group
+        description: "Age group category the customer belongs to"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Under 18', '18-24', '25-34', '35-44', '45-54', '55+']
+      - name: employment_title
+        description: "Customer's job title or profession"
+      - name: address_country
+        description: "Country of the customer's address"
