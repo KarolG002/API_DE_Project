@@ -11,7 +11,7 @@
 - [Acknowledgments](#acknowledgments)
 ## Project Overview
 
-The goal of this project is to do an etl pipeline with python, dbt and bigquery to analyze wine data.
+This project demonstrates a comprehensive data engineering pipeline that generates fake customer data, processes it through various stages, and ultimately visualizes it in a Power BI dashboard. The pipeline utilizes modern data engineering tools and practices, including custom API development, ETL processes, data warehousing, and orchestration.
 
 ## Project Architecture
 
