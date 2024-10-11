@@ -7,7 +7,6 @@
 - [Power BI Dashboard](#power-bi-dashboard)
 - [Prerequisites](#prerequisites)
 - [Setup](#setup)
-- [Testing](#testing)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 ## Project Overview
