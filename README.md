@@ -1,4 +1,4 @@
-# API_DE_PROJECT
+# Fake Data Generator API Project
 
 ## Table of Contents
 
